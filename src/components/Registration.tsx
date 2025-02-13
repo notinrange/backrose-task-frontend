@@ -1,7 +1,7 @@
 // src/components/Registration.tsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../utils/api';
+import api from '../utils/api.ts';
 
 const Registration: React.FC = () => {
   const [username, setUsername] = useState('');
