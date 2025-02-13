@@ -1,8 +1,8 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login.jsx';
-import Registration from './components/Registration.jsx';
+import Login from './components/Login.tsx';
+import Registration from './components/Registration.tsx';
 import Dashboard from './components/Dashboard.tsx';
 import { useSelector } from 'react-redux';
 import type { RootState } from './store';
