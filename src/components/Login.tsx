@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../utils/api.ts';
+import api from '../utils/api';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
