@@ -25,7 +25,7 @@ const ChartComponent = () => {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
     // Connect to the WebSocket endpoint (adjust the URL if needed)
-    ws.current = new WebSocket(`ws://localhost:8000/ws/numbers?token=${token}`);
+    ws.current = new WebSocket(`ws:process.env.REACT_APP_API_BASE_URL/ws/numbers?token=${token}`);
     
     ws.current.onopen = () => {
       console.log("WebSocket connected");
