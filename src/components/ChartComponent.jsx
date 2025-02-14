@@ -24,37 +24,27 @@ const ChartComponent = () => {
   useEffect(() => {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
-    // Connect to the WebSocket endpoint using a template literal with backticks
-    ws.current = new WebSocket(
-      `${process.env.REACT_APP_API_BASE_URL.replace(/^http/, 'ws')}/ws/numbers?token=${token}`
-    );
-
+    // Connect to the WebSocket endpoint (adjust the URL if needed)
+    ws.current = new WebSocket(`ws://task-blackrose.vercel.app/ws/numbers?token=${token}`);
+    
     ws.current.onopen = () => {
       console.log("WebSocket connected");
     };
 
     ws.current.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        const timestamp = new Date(message.timestamp).toLocaleTimeString();
-        const value = message.value;
-        // Update chart data while keeping only the last 20 entries
-        setChartData((prevData) => ({
-          labels: [...prevData.labels, timestamp].slice(-20),
-          datasets: [
-            {
-              ...prevData.datasets[0],
-              data: [...prevData.datasets[0].data, value].slice(-20),
-            },
-          ],
-        }));
-      } catch (error) {
-        console.error("Error processing WebSocket message:", error);
-      }
-    };
-
-    ws.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
+      const message = JSON.parse(event.data);
+      const timestamp = new Date(message.timestamp).toLocaleTimeString();
+      const value = message.value;
+      // Update chart data while keeping only the last 20 entries
+      setChartData((prevData) => ({
+        labels: [...prevData.labels, timestamp].slice(-20),
+        datasets: [
+          {
+            ...prevData.datasets[0],
+            data: [...prevData.datasets[0].data, value].slice(-20),
+          },
+        ],
+      }));
     };
 
     ws.current.onclose = () => {
@@ -62,9 +52,7 @@ const ChartComponent = () => {
     };
 
     return () => {
-      if (ws.current) {
-        ws.current.close();
-      }
+      ws.current.close();
     };
   }, []);
 
