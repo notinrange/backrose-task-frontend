@@ -1,70 +1,221 @@
-# Getting Started with Create React App
+# Blackrose Task
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a dummy full‑stack application demonstrating authentication, real‑time data visualization, and CRUD operations. The backend is built with FastAPI (using SQLite and CSV file handling) and the frontend is built with React. The backend is hosted on Render and the frontend on Vercel (or Netlify).
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Features](#features)
+- [Local Setup Instructions](#local-setup-instructions)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Testing Steps](#testing-steps)
+  - [Authentication](#authentication)
+  - [Real-Time Data Visualization](#real-time-data-visualization)
+  - [CSV CRUD Operations](#csv-crud-operations)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Hosted Application Links](#hosted-application-links)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+- **Authentication:**  
+  - User registration and login endpoints using FastAPI.
+  - JWT tokens are issued for authenticated sessions and stored in the database.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Random Number Generator:**  
+  - A background task generates a random number every second and stores it in a SQLite database.
+  - A WebSocket endpoint streams these numbers in real time.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **CSV CRUD Operations:**  
+  - Endpoints allow for Create, Read, Update, and Delete operations on a CSV file.
+  - The CSV file uses the following format and headers:
+    ```
+    user, broker, API key, API secret, pnl, margin, max_risk
+    user_1, BrokerA, APIKEY_1294, APISECRET_83978, 3911.21, 32134.43, 2.63
+    user_2, BrokerB, APIKEY_2481, APISECRET_48637, -3670.28, 39863.92, 9.79
+    user_3, BrokerB, APIKEY_7580, APISECRET_92061, -1349.18, 37607.74, 0.36
+    user_4, BrokerC, APIKEY_1819, APISECRET_66637, 1114.96, 42650.44, 2.59
+    user_5, BrokerA, APIKEY_9241, APISECRET_77485, 1779.82, 36279.78, 4.47
+    user_6, BrokerB, APIKEY_3843, APISECRET_67949, 677.96, 2226.61, 6.31
+    user_7, BrokerA, APIKEY_4889, APISECRET_50033, -3227.61, 43271.03, 9.89
+    user_8, BrokerB, APIKEY_2998, APISECRET_64865, 513.78, 5138.49, 0.98
+    user_9, BrokerB, APIKEY_5588, APISECRET_29626, -2203.73, 12033.94, 6.42
+    user_10, BrokerC, APIKEY_8492, APISECRET_68319, 212.89, 40958.06, 5.69
+    user_11, BrokerB, APIKEY_9496, APISECRET_51317, 1567.69, 6536.02, 8.64
+    user_12, BrokerA, APIKEY_6808, APISECRET_74291, -4358.3, 24420.21, 5.7
+    ```
+  - A backup mechanism creates a backup before each write, and a restore endpoint is provided.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Concurrency Management:**  
+  - File locking is implemented for CSV operations to handle simultaneous modifications.
 
-### `npm run eject`
+- **Frontend:**  
+  - A dark-themed React application with a login/registration flow.
+  - A dashboard displays a real‑time chart (via Chart.js) and a paginated table of random numbers.
+  - A CSV Editor interface to manage CSV data and a Recovery UI to restore data from backup.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Local Setup Instructions
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Backend Setup
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/notinrange/blackrose-task-backend.git
+   cd backend
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Install Dependencies
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+pip install -r requirements.txt
+```
 
-### Code Splitting
+## Initialize the Database and CSV File
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- The backend automatically initializes the SQLite database (`backend.db`) and the CSV file (`backend_table.csv`) with sample data if they do not exist.
+- Ensure your project directory has write permissions.
 
-### Analyzing the Bundle Size
+## Run the Backend Server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+uvicorn app.main:app --reload
+```
 
-### Making a Progressive Web App
+The backend will run on [http://localhost:8000](http://localhost:8000).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+# Frontend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Clone the Repository
 
-### Deployment
+```bash
+git clone https://github.com/notinrange/blackrose-task-frontend
+cd frontend
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Install Dependencies
 
-### `npm run build` fails to minify
+```bash
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Configure Environment Variables
+
+Create a `.env` file in the frontend root with:
+
+```ini
+REACT_APP_API_BASE_URL=http://localhost:8000
+```
+
+This variable points your frontend API calls to your local backend.
+
+## Run the Frontend Development Server
+
+```bash
+npm start
+```
+
+The frontend will run on [http://localhost:3000](http://localhost:3000).
+
+---
+
+# Testing Steps
+
+## Authentication
+
+### Register a New User
+
+Use the frontend registration page or send a POST request to `/register` with:
+
+```json
+{
+  "username": "testuser",
+  "password": "testpass"
+}
+```
+
+Verify that you receive a success message.
+
+### Login
+
+Use the frontend login page or send a POST request to `/login` with:
+
+```json
+{
+  "username": "testuser",
+  "password": "testpass"
+}
+```
+
+Verify that you receive a JWT token. The token should be stored in `localStorage` and used in subsequent requests.
+
+## Real-Time Data Visualization
+
+### Random Number Generation
+
+- The backend generates a random number every second and stores it in the database.
+
+### WebSocket Streaming
+
+- Connect to the `/ws/numbers` endpoint using your JWT token.
+- Confirm that the React chart (using Chart.js) updates in real-time with the new numbers.
+
+### Paginated Table
+
+- The `DataTable` component fetches random numbers via the `/numbers` endpoint.
+- Verify that pagination works and displays the specified number of records per page.
+
+## CSV CRUD Operations
+
+### Fetch CSV Data
+
+- Use the CSV Editor or send a GET request to `/csv` to retrieve current CSV records.
+
+### Create a New CSV Record
+
+Use the CSV Editor to add a record with fields matching:
+
+```css
+user, broker, API key, API secret, pnl, margin, max_risk
+```
+
+### Update an Existing CSV Record
+
+- Modify a record via the CSV Editor, identified by the `user` field.
+
+### Delete a CSV Record
+
+- Delete a record via the CSV Editor.
+
+### Restore CSV Backup
+
+- Use the Recovery UI or call the `/csv/restore` endpoint to restore the CSV from backup.
+
+---
+
+
+
+
+---
+
+# Hosted Application Links
+
+- **Backend:** [https://blackrose-task-backend.onrender.com](https://blackrose-task-backend.onrender.com)
+- **Frontend:** [https://task-blackrose.vercel.app/](https://task-blackrose.vercel.app/)
+
+# When you logged in there is no lines shown because render.com in free plan does not allow establish a secure WebSocket connection 
+
+
+
+
+
+https://github.com/user-attachments/assets/3d0b7044-7151-4c87-892e-2d96e5746773
+
+
