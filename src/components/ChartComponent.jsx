@@ -24,27 +24,38 @@ const ChartComponent = () => {
   useEffect(() => {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
-    // Connect to the WebSocket endpoint (adjust the URL if needed)
-    ws.current = new WebSocket(`${process.env.REACT_APP_API_BASE_URL.replace(/^http/, 'ws')}/ws/numbers?token=${token}`);
-    
+    // Retrieve the API base URL or fallback to localhost
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+    // Build the WebSocket URL by replacing the protocol and appending the token
+    const wsUrl = `${apiUrl.replace(/^http/, 'ws')}/ws/numbers?token=${token}`;
+    ws.current = new WebSocket(wsUrl);
+
     ws.current.onopen = () => {
       console.log("WebSocket connected");
     };
 
     ws.current.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      const timestamp = new Date(message.timestamp).toLocaleTimeString();
-      const value = message.value;
-      // Update chart data while keeping only the last 20 entries
-      setChartData((prevData) => ({
-        labels: [...prevData.labels, timestamp].slice(-20),
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: [...prevData.datasets[0].data, value].slice(-20),
-          },
-        ],
-      }));
+      try {
+        const message = JSON.parse(event.data);
+        const timestamp = new Date(message.timestamp).toLocaleTimeString();
+        const value = message.value;
+        // Update chart data while keeping only the last 20 entries
+        setChartData((prevData) => ({
+          labels: [...prevData.labels, timestamp].slice(-20),
+          datasets: [
+            {
+              ...prevData.datasets[0],
+              data: [...prevData.datasets[0].data, value].slice(-20),
+            },
+          ],
+        }));
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      console.error("WebSocket error:", error);
     };
 
     ws.current.onclose = () => {
@@ -52,7 +63,9 @@ const ChartComponent = () => {
     };
 
     return () => {
-      ws.current.close();
+      if (ws.current) {
+        ws.current.close();
+      }
     };
   }, []);
 
