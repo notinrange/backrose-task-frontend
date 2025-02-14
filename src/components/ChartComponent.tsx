@@ -30,27 +30,29 @@ const ChartComponent: React.FC = () => {
     ],
   });
 
+  // Define a ref for the WebSocket instance
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error("No token found in localStorage.");
+      console.error("No token found in localStorage. Please log in.");
       return;
     }
 
-    // Get the API base URL from environment variables
+    // Retrieve the API base URL from environment variables
     const apiUrl = process.env.REACT_APP_API_BASE_URL;
     if (!apiUrl) {
-      console.error("REACT_APP_API_BASE_URL is not set.");
+      console.error("Environment variable REACT_APP_API_BASE_URL is not set.");
       return;
     }
 
     // Build the WebSocket URL by replacing 'http' or 'https' with 'wss'
-    const wsUrl = `${apiUrl.replace(/^https?/, 'ws')}/ws/numbers?token=${token}`;
+    const wsUrl = `${apiUrl.replace(/^https?/, 'wss')}/ws/numbers?token=${token}`;
     console.log("Connecting to WebSocket URL:", wsUrl);
-    
+
+    // Create the WebSocket connection
     ws.current = new WebSocket(wsUrl);
 
     ws.current.onopen = () => {
@@ -59,10 +61,10 @@ const ChartComponent: React.FC = () => {
 
     ws.current.onmessage = (event: MessageEvent) => {
       try {
-        const message = JSON.parse(event.data);
-        const timestamp = new Date(message.timestamp).toLocaleTimeString();
-        const value = message.value;
-        // Update chart data while keeping only the last 20 entries
+        const data = JSON.parse(event.data);
+        const timestamp = new Date(data.timestamp).toLocaleTimeString();
+        const value = data.value;
+        // Update chart data, keeping only the last 20 entries
         setChartData((prevData) => ({
           labels: [...prevData.labels, timestamp].slice(-20),
           datasets: [
@@ -78,13 +80,14 @@ const ChartComponent: React.FC = () => {
     };
 
     ws.current.onerror = (error: Event) => {
-      console.error("WebSocket error:", error);
+      console.error("WebSocket encountered error:", error);
     };
 
-    ws.current.onclose = () => {
-      console.log("WebSocket disconnected");
+    ws.current.onclose = (event: CloseEvent) => {
+      console.log("WebSocket closed with code:", event.code, "reason:", event.reason);
     };
 
+    // Cleanup on component unmount
     return () => {
       if (ws.current) {
         ws.current.close();
