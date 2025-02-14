@@ -216,6 +216,9 @@ user, broker, API key, API secret, pnl, margin, max_risk
 
 
 
-https://github.com/user-attachments/assets/3d0b7044-7151-4c87-892e-2d96e5746773
+
+
+https://github.com/user-attachments/assets/aa505aaa-64ce-4919-90ac-3b9971bd3611
+
 
 
