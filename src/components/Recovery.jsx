@@ -1,6 +1,6 @@
 // src/components/Recovery.jsx
 import React, { useState } from 'react';
-import api from '../utils/api.ts';
+import api from '../utils/api';
 
 const Recovery = () => {
   const [message, setMessage] = useState('');
