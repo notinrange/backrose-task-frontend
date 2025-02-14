@@ -30,14 +30,28 @@ const ChartComponent: React.FC = () => {
     ],
   });
 
-  // Annotate the WebSocket ref
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error("No token found in localStorage.");
+      return;
+    }
+
+    // Get the API base URL from environment variables
+    const apiUrl = process.env.REACT_APP_API_BASE_URL;
+    if (!apiUrl) {
+      console.error("REACT_APP_API_BASE_URL is not set.");
+      return;
+    }
+
+    // Build the WebSocket URL by replacing 'http' or 'https' with 'wss'
+    const wsUrl = `${apiUrl.replace(/^https?/, 'wss')}/ws/numbers?token=${token}`;
+    console.log("Connecting to WebSocket URL:", wsUrl);
     
-    ws.current = new WebSocket(`${process.env.REACT_APP_API_BASE_URL.replace(/^https?/, 'wss')}/ws/numbers?token=${token}`);
+    ws.current = new WebSocket(wsUrl);
 
     ws.current.onopen = () => {
       console.log("WebSocket connected");
