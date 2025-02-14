@@ -3,10 +3,10 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store';
 import { useNavigate } from 'react-router-dom';
-import ChartComponent from './ChartComponent.jsx';
+import ChartComponent from './ChartComponent.tsx';
 import DataTable from './DataTable.tsx';
 import CSVEditor from './CSVEditor.tsx';
-import Recovery from './Recovery.jsx';
+import Recovery from './Recovery.tsx';
 import type { RootState } from '../store';
 
 const Dashboard: React.FC = () => {
