@@ -1,12 +1,23 @@
-// src/components/ChartComponent.jsx
+// src/components/ChartComponent.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, LineElement, PointElement, LinearScale, CategoryScale } from 'chart.js';
 
 Chart.register(LineElement, PointElement, LinearScale, CategoryScale);
 
-const ChartComponent = () => {
-  const [chartData, setChartData] = useState({
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+    fill: boolean;
+  }[];
+}
+
+const ChartComponent: React.FC = () => {
+  const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
       {
@@ -19,7 +30,8 @@ const ChartComponent = () => {
     ],
   });
 
-  const ws = useRef(null);
+  // Annotate the WebSocket ref
+  const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     // Retrieve the token from localStorage
@@ -34,7 +46,7 @@ const ChartComponent = () => {
       console.log("WebSocket connected");
     };
 
-    ws.current.onmessage = (event) => {
+    ws.current.onmessage = (event: MessageEvent) => {
       try {
         const message = JSON.parse(event.data);
         const timestamp = new Date(message.timestamp).toLocaleTimeString();
@@ -54,7 +66,7 @@ const ChartComponent = () => {
       }
     };
 
-    ws.current.onerror = (error) => {
+    ws.current.onerror = (error: Event) => {
       console.error("WebSocket error:", error);
     };
 
