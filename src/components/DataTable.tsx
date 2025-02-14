@@ -1,6 +1,6 @@
 // src/components/DataTable.tsx
 import React, { useEffect, useState } from 'react';
-import api from '../utils/api.ts';
+import api from '../utils/api';
 
 interface NumberRecord {
   id: number;
