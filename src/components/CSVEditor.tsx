@@ -1,7 +1,7 @@
 // src/components/CSVEditor.tsx
 import React, { useState, useEffect } from "react";
-import api from "../utils/api.ts";
-// import { CSVRecord } from "../models"; // Optional: if you create a separate TS model file for CSV; otherwise, inline types.
+import api from "../utils/api";
+import { CSVRecord } from "../models"; // Optional: if you create a separate TS model file for CSV; otherwise, inline types.
 
 interface CSVRecordType {
   user: string;
