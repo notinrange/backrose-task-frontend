@@ -48,7 +48,7 @@ const ChartComponent: React.FC = () => {
     }
 
     // Build the WebSocket URL by replacing 'http' or 'https' with 'wss'
-    const wsUrl = `${apiUrl.replace(/^https?/, 'wss')}/ws/numbers?token=${token}`;
+    const wsUrl = `${apiUrl.replace(/^https?/, 'ws')}/ws/numbers?token=${token}`;
     console.log("Connecting to WebSocket URL:", wsUrl);
     
     ws.current = new WebSocket(wsUrl);
